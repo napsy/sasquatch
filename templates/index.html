@@ -1,0 +1,113 @@
+<html>
+	<head>
+		<title>Service Health</title>
+<link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
+
+<script language="javascript">
+window.onload = function(e) { 
+	console.log('asdasdadasd');
+	var d = new Date();
+	document.getElementById("date").innerHTML = d;
+	setTimeout(function(){
+		window.location.reload(1);
+	}, 60000);
+}
+</script>
+<style>
+body {
+	font-size: 10pt;
+	margin: 0px;
+    font-family: 'Work Sans', sans-serif;
+}
+
+table, th, td {
+	font-size: 10pt;
+	margin: 5px;
+	padding: 6px;
+}
+
+th {
+	background: #e2e2e2;
+}
+
+td {
+	border-bottom: 1px solid #cccccc;
+}
+tr:hover {
+	background-color: #efefef;
+	border-bottom: 1px solid #cccccc;
+}
+
+#header {
+	color: white;
+    background-image: url("static/bg.png");
+     text-shadow: 0px 0px 2px #4c4c4c;
+	padding: 10px;
+	background-color: #a3cee2;
+	border-bottom: 2px solid #2f527a;
+}
+
+#message-bubble {
+	margin-top: 20px;
+	padding: 10px;
+	background: #d8e5be;
+	border-top: 1px solid #26773e;
+	border-bottom: 1px solid #26773e;
+}
+
+#message-bubble-error {
+	margin-top: 20px;
+	padding: 10px;
+	background: #f4ded0;
+	border-top: 1px solid #ba7964;
+	border-bottom: 1px solid #ba7964;
+}
+
+#message {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background: #b1ceab;
+    border-radius: 25px;
+}
+#message-error {
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 10px;
+	padding-right: 10px;
+	background: #edb4b1;
+    border-radius: 25px;
+}
+img {
+	padding-top: -20px;
+	padding-right: 10px;
+}
+
+</style>
+	</head>
+	<body>
+		<div id="header">
+		<h1>Service Health</h1>
+		<p style="font-size: 10pt;">Generated at <b><span id="date"></span></b></p>
+		<p>This page is automatically refreshed every 60 seconds</p>
+		</div>
+		{{ if .Healthy  }}
+		<div id="message-bubble">✔ Relax, everything is working just fine ...</div>
+		{{ else }}
+		<div id="message-bubble-error">❌ Some services might not work!</div>
+		{{ end }}
+		<table>
+			<tr><th style="width: 400px;"><b>Service</b></th><th style="width: 130px;"><b>Status</b></th><th><b>Availability</b><span style="font-size:9pt;"> (one month, in %)</span></th><tr>
+		{{ range $k, $v := .Services }}
+		<tr><td id="service">{{ $k }}</td>
+				{{ if .HealthCheck.Unhealthy }}
+				<td><span id="message-error"><a href="{{ .HealthCheck.Location }} ">❌ service not ok</a></span></td><td>{{ printf "%.4f" (.GetAvailability $k) }}%</td>
+				{{ else }}
+				<td><span id="message">✔ service ok<span></td><td>{{ printf "%.4f" (.GetAvailability $k) }}%</td>
+				{{ end }}
+			</td></tr>
+		{{ end }}
+		</table>
+	</body>
+</html>

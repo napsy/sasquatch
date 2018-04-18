@@ -1,0 +1,65 @@
+<html>
+	<head>
+		<title>Service Health</title>
+<link href="https://fonts.googleapis.com/css?family=Work+Sans" rel="stylesheet">
+
+<script language="javascript">
+window.onload = function(e) { 
+	console.log('asdasdadasd');
+	var d = new Date();
+	document.getElementById("date").innerHTML = d;
+	setTimeout(function(){
+		window.location.reload(1);
+	}, 60000);
+}
+</script>
+<style>
+body {
+    font-family: 'Work Sans', sans-serif;
+	transform-origin: top left;
+	-webkit-transform: scale(1.7, 1.7);
+	transform: scale(1.7, 1.7);
+	margin: 0px;
+}
+
+table, th, td {
+	margin: 5px;
+	padding: 3px;
+}
+
+
+#header {
+	padding: 10px;
+	background-color: #d8d8d8;
+	border-bottom: 2px solid black;
+}
+#service {
+	border-bottom: 2px dotted #4c4c4c;
+}
+#status {
+	border-bottom: 2px dotted #4c4c4c;
+}
+
+</style>
+	</head>
+	<body>
+		<div id="header">
+		<h1>Service Health</h1>
+		<p>This page is automatically refreshed every 60 seconds</p>
+		<p style="font-size: 10pt;">Generated at <b><span id="date"></span></b></p>
+		</div>
+
+		<table>
+			<tr><td style="width: 280px;"><b>Service</b></td><td style="width: 150px;"><b>Status</b></td><tr>
+		{{ range $k, $v := .Services }}
+		<tr><td id="service">{{ $k }}</td>
+				{{ if .HealthCheck.Unhealthy }}
+				<td id="status" style="color: white; background: #9e9e9e;"><b>❌ service not ok</b></td>
+				{{ else }}
+				<td id="status">✔ service ok</td>
+				{{ end }}
+			</td></tr>
+		{{ end }}
+		</table>
+	</body>
+</html>

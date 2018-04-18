@@ -1,0 +1,20 @@
+database: sesquatch.db
+services:
+  service1:
+    healthcheck:
+      type: http
+      location: http://example.com/api/check
+      error: message
+      value: '!= "server ok"'
+      response: ./scripts/slack-notify.sh
+      retries: 2
+      interval: 60
+  "important server ping":
+    healthcheck:
+      type: script
+      location: ./scripts/ping.sh
+      error: message
+      value: '!= "ping ok"'
+      response: ./scripts/slack-notify.sh
+      retries: 2
+      interval: 60
